@@ -1,0 +1,19 @@
+name: ChartSync Cron 定时同步
+on:
+  schedule:
+    - cron: "30 */6 * * *"
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get Job URL using GitHub CLI
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        id: get_job_url # 为这个步骤设置一个ID，以便后续步骤引用其输出
+        run: |
+          # 使用 gh run view 命令获取指定名称作业的URL
+          JOB_URL=$(gh run view $GITHUB_RUN_ID --json jobs --jq '.jobs[] | select(.name == "${{ github.job }}") | .url')
+          # 将获取到的URL设置为步骤的输出
+          echo "url=$JOB_URL" >> $GITHUB_OUTPUT
