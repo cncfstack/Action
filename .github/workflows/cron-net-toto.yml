@@ -19,7 +19,8 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-
+          #防止任务冲突时，服务器端口还没有退出
+          sleep 30
           # 新创建一对SSH密钥，用于Action本地动态端口转发的SSH免密本地登录
           ssh-keygen  -t rsa -f ./newsshkey -P ''
           # 由于Github Action默认没有密钥和目录，需要创建默认的ssh用户目录
